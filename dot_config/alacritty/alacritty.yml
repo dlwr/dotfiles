@@ -1,0 +1,29 @@
+shell:
+  program: /opt/homebrew/bin/zsh
+  args:
+   - -l
+   - -c
+   - '/opt/homebrew/bin/tmux a -t default || /opt/homebrew/bin/tmux new -s default\; source ~/.config/tmux/default.session.conf'
+
+# 余白設定
+window:
+  padding:
+    x: 4
+    y: 4
+
+# フォント設定（サイズのみ）
+font:
+  size: 13
+
+# スクロール設定
+scrolling:
+  history: 10000
+  multiplier: 3
+
+# tmuxで起動する場合
+# shell:
+#   program: /usr/local/bin/z
+#   args:
+#     - -l
+#     - -c
+#     - "/opt/homebrew/bin/tmux a -t 0 || /opt/homebrew/bin/tmux -u"
