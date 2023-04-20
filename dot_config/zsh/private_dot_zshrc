@@ -197,7 +197,7 @@ fzf-branch() {
   zle clear-screen
 }
 zle -N fzf-branch
-bindkey '^[b' fzf-branch
+bindkey '^[r' fzf-branch
 
 # cdrの履歴からディレクトリを移動する
 fzf-cdr(){
@@ -210,9 +210,11 @@ fzf-cdr(){
     zle clear-screen
 }
 zle -N fzf-cdr
-bindkey '^[r' fzf-cdr
+bindkey '^[c' fzf-cdr
 
 alias ls='exa --classify --icons -h --reverse'
 alias sed='gsed'
 . $(brew --prefix asdf)/libexec/asdf.sh
+export LANG=ja_JP.UTF-8
+setopt print_eight_bit
 ###
