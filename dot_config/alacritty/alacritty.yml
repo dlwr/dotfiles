@@ -3,13 +3,14 @@ shell:
   args:
    - -l
    - -c
-   - '/opt/homebrew/bin/tmux a -t default || /opt/homebrew/bin/tmux new -s default\; source ~/.config/tmux/default.session.conf'
+   - '/opt/homebrew/bin/tmux a -t -u default || /opt/homebrew/bin/tmux new -s -u default\; source ~/.config/tmux/default.session.conf'
 
 # 余白設定
 window:
   padding:
     x: 4
     y: 4
+  option_as_alt: Both
 
 # フォント設定（サイズのみ）
 font:
