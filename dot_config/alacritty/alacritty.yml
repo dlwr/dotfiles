@@ -14,7 +14,18 @@ window:
 
 # フォント設定（サイズのみ）
 font:
-  size: 13
+  normal:
+    family: 'Cica'
+    style: Regular
+
+  bold:
+    family: 'Cica'
+    style: Bold
+
+  size: 13.0
+
+  offset:
+    y: 1
 
 # スクロール設定
 scrolling:
@@ -28,3 +39,4 @@ scrolling:
 #     - -l
 #     - -c
 #     - "/opt/homebrew/bin/tmux a -t 0 || /opt/homebrew/bin/tmux -u"
+
