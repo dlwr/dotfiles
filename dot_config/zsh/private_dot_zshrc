@@ -96,17 +96,17 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  if (( ${+commands[curl]} )); then
-    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+    if (( ${+commands[curl]} )); then
+        curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  else
-    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+    else
+        mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  fi
+    fi
 fi
 # Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
+    source ${ZIM_HOME}/zimfw.zsh init -q
 fi
 # Initialize modules.
 source ${ZIM_HOME}/init.zsh
@@ -142,62 +142,58 @@ zstyle ':chpwd:*' recent-dirs-file "$XDG_DATA_HOME"/zsh/chpwd-recent-dirs
 cdpath=(~ ..)
 
 function u() {
-  cd ./"$(git rev-parse --show-cdup)"
-  if [ $# = 1 ]; then
-    cd "$1"
-  fi
+    cd ./"$(git rev-parse --show-cdup)"
+    if [ $# = 1 ]; then
+        cd "$1"
+    fi
 }
 _u() {
-  _values $(fd --type d --base-directory $(git rev-parse --show-cdup))
+    _values $(fd --type d --base-directory $(git rev-parse --show-cdup))
 }
 compdef _u u
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 fzf-ghq() {
-  local repo=$(ghq list | fzf --preview "ghq list --full-path --exact {} | xargs exa -h --long --icons --classify --git --no-permissions --no-user --no-filesize --git-ignore --sort modified --reverse --tree --level 2")
-  if [ -n "$repo" ]; then
-    repo=$(ghq list --full-path --exact $repo)
-    BUFFER="cd ${repo}"
-    zle accept-line
-  fi
-  zle clear-screen
+    local repo=$(ghq list | fzf --preview "ghq list --full-path --exact {} | xargs exa -h --long --icons --classify --git --no-permissions --no-user --no-filesize --git-ignore --sort modified --reverse --tree --level 2")
+    if [ -n "$repo" ]; then
+        repo=$(ghq list --full-path --exact $repo)
+        BUFFER="cd ${repo}"
+        zle accept-line
+    fi
+    zle clear-screen
 }
 zle -N fzf-ghq
 bindkey '^[s' fzf-ghq
 
 fzf-pullreq() {
-  local pullreq=$(CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr list | tail -n+4 | fzf --ansi --bind "change:reload:CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr list -S {q} | tail -n+4 || true" --disabled --preview "CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr view {1} | bat --color=always --style=grid --file-name a.md")
-  if [ -n "$pullreq" ]; then
-    pullreq=$(echo $pullreq | awk '{ print $1 }')
-    BUFFER="gh pr checkout \"${pullreq}\""
-    zle accept-line
-  fi
-  zle clear-screen
+    local pullreq=$(CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr list | tail -n+4 | fzf --ansi --bind "change:reload:CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr list -S {q} | tail -n+4 || true" --disabled --preview "CLICOLOR_FORCE=1 GH_FORCE_TTY=100% gh pr view {1} | bat --color=always --style=grid --file-name a.md")
+    if [ -n "$pullreq" ]; then
+        pullreq=$(echo $pullreq | awk '{ print $1 }')
+        BUFFER="gh pr checkout \"${pullreq}\""
+        zle accept-line
+    fi
+    zle clear-screen
 }
 zle -N fzf-pullreq
 bindkey '^[p' fzf-pullreq
 
-# ブランチを選択して switch する
-fzf-branch() {
-  local format="\
-%(color:yellow)%(refname:short)%(color:reset)|\
-%(color:bold red)%(objectname:short)%(color:reset) \
-%(color:bold green)(%(committerdate:relative))%(color:reset) \
-%(color:bold blue)%(authorname)%(color:reset) \
-%(color:yellow)%(upstream:track)%(color:reset)|\
-%(contents:subject)"
-
-  local branch=$(git for-each-ref --color=always --sort=-committerdate "refs/heads/" --format="$format" | column -ts "|" | fzf --preview "git log --color {1}")
-  if [ -n "$branch" ]; then
-    branch=$(echo $branch | awk '{ print $1 }')
-    BUFFER="git switch ${branch}"
-    zle accept-line
-  fi
-  zle clear-screen
+function select-git-switch() {
+    target_br=$(
+        git branch -a |
+        fzf --exit-0 --layout=reverse --info=hidden --no-multi --preview-window="right,65%" --prompt="CHECKOUT BRANCH > " --preview="echo {} | tr -d ' *' | xargs git log --color=always" |
+        head -n 1 |
+        perl -pe "s/\s//g; s/\*//g; s/remotes\/origin\///g"
+    )
+    if [ -n "$target_br" ]; then
+        branch=$(echo $target_br | awk '{ print $1 }')
+        BUFFER="git switch '${branch}'"
+        zle accept-line
+    fi
+    zle clear-screen
 }
-zle -N fzf-branch
-bindkey '^[r' fzf-branch
+zle -N select-git-switch
+bindkey "^[r" select-git-switch
 
 # cdrの履歴からディレクトリを移動する
 fzf-cdr(){
@@ -217,4 +213,3 @@ alias sed='gsed'
 . $(brew --prefix asdf)/libexec/asdf.sh
 export LANG=ja_JP.UTF-8
 setopt print_eight_bit
-###
