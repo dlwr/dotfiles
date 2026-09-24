@@ -23,7 +23,7 @@ palette = 15=#fdf6e3
 
 mouse-scroll-multiplier = 3
 
-command = /opt/homebrew/bin/zsh -l -c '/opt/homebrew/bin/herdr || exec /opt/homebrew/bin/zsh -l'
+command = /opt/homebrew/bin/zsh -l -c '/opt/homebrew/bin/herdr; exec /opt/homebrew/bin/zsh -l'
 
 macos-option-as-alt = true
 
