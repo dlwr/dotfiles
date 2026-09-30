@@ -1,0 +1,13 @@
+*~
+.DS_Store
+settings.json
+.tool-versions
+.history
+*.bak
+**/*.bak
+cspell.json
+*.mdc
+node_modules/*
+kakisute
+settings.local.json
+cipher-sessions*
