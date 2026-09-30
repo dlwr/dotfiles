@@ -1,0 +1,26 @@
+onboarding = false
+
+[theme]
+name = "solarized-light"
+
+[keys]
+prefix = "ctrl+q"
+detach = ["prefix+q", "prefix+d", "prefix+ctrl+d"]
+split_vertical = ["prefix+v", "prefix+|", "prefix+backslash"]
+split_horizontal = ["prefix+minus", "prefix+_"]
+goto = ["prefix+g", "prefix+ctrl+g"]
+switch_workspace = "prefix+shift+1..9"
+
+[ui]
+prompt_new_tab_name = false
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "machine", "workspace", "tab", "agent"],
+  ["terminal_title_stripped"],
+]
+
+[experimental]
+switch_ascii_input_source_in_prefix = true
+reveal_hidden_cursor_for_cjk_ime = true
+cjk_ime_agents = ["claude"]
