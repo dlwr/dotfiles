@@ -1,0 +1,26 @@
+
+# 親プロセス（Zed 等の常駐アプリ）から古い FPATH を継承した場合の自己修復。
+# fpath は rc より先に環境変数 FPATH から初期化されるため、削除済みの
+# 旧 zsh バージョンの Cellar パスを指したままだと autoload が全滅する。
+fpath=(${^fpath}(N-/))
+_fpath_compinit=(${^fpath}/compinit(N))
+if (( ! $#_fpath_compinit )); then
+  fpath+=(/opt/homebrew/Cellar/zsh/*/share/zsh/functions(N) /usr/share/zsh/*/functions(N))
+fi
+unset _fpath_compinit
+
+# Load custom zsh configuration
+export ZDOTDIR="$HOME/.config/zsh"
+[[ -f "$ZDOTDIR/.zshenv" ]] && source "$ZDOTDIR/.zshenv"
+# alias claude='~/.claude/local/claude'
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# brew shellenv が FPATH を export するのを解除。export されていると Zed 等の
+# 常駐アプリが古い FPATH（旧 zsh バージョンの Cellar パス）をキャッシュし、
+# zsh アップグレード後に autoload 関数が全滅する
+typeset +x FPATH
+
+export PATH="$PATH:/Users/yuta25/.local/bin"
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+eval "$(mise activate zsh --shims)"
+eval "$(direnv hook zsh)"

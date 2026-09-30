@@ -1,0 +1,26 @@
+[settings]
+legacy_version_file = false
+disable_backends = ["asdf"]
+minimum_release_age = "7d"
+
+[tools]
+bun = "1.0.30"
+node = "22"
+ruby = "4.0.5"
+ecspresso = "2.3.0"
+python = "3.10.13"
+"npm:@openai/codex" = { version = "latest", minimum_release_age = "0" }
+rust = "latest"
+terraform = "latest"
+java = "openjdk-17"
+"vfox:mise-plugins/vfox-android-sdk" = "19.0"
+"npm:wrangler" = "latest"
+"npm:agent-browser" = "latest"
+"aqua:godotengine/godot" = "latest"
+"npm:ntn" = "latest"
+"npm:@googleworkspace/cli" = "latest"
+gcloud = "latest"
+"npm:@helpfeel/cosense-cli" = "latest"
+"npm:vercel" = "latest"
+
+[env]
