@@ -1,7 +1,25 @@
+# 親プロセス（Zed 等の常駐アプリ）から古い FPATH を継承した場合の自己修復。
+# fpath は rc より先に環境変数 FPATH から初期化されるため、削除済みの
+# 旧 zsh バージョンの Cellar パスを指したままだと autoload が全滅する。
+# 注意: ZDOTDIR が環境に export されていると ~/.zshenv は読まれず、この
+# ファイルが最初の入口になるので、修復はここに置く必要がある。
+fpath=(${^fpath}(N-/))
+_fpath_compinit=(${^fpath}/compinit(N))
+if (( ! $#_fpath_compinit )); then
+  fpath+=(/opt/homebrew/Cellar/zsh/*/share/zsh/functions(N) /usr/share/zsh/*/functions(N))
+fi
+unset _fpath_compinit
+typeset +x FPATH
+
+# Zed等のターミナルが起動時にTERM=dumb/空で立ち上がると、zim(utility module)が
+# NO_COLOR=1をexportしてClaude Code等の色が消える。zim(.zshrc)より先に補正しておく。
+if [[ -z "$TERM" || "$TERM" = "dumb" ]]; then
+  export TERM=xterm-256color
+fi
+
 export XDG_CONFIG_HOME="$HOME"/.config
 export XDG_CACHE_HOME="$HOME"/.cache
 export XDG_DATA_HOME="$HOME"/.local/share
 export XDG_STATE_HOME="$HOME"/.local/state
 export FZF_DEFAULT_OPTS='--layout=reverse --border --exit-0'
 export TMUX_PLUGIN_MANAGER_PATH="~/.local/share/tmux/plugins"
-export FZF_DEFAULT_OPTS='--layout=reverse --border --exit-0'
